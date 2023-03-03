@@ -215,7 +215,30 @@
             </div>
         </div>
     </div>
-
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyD-4hU5nCTrZXGftkZ2nFWYlQFnp0MPlCA",
+          authDomain: "project-dropbox-clone.firebaseapp.com",
+          databaseURL: "https://project-dropbox-clone-default-rtdb.firebaseio.com",
+          projectId: "project-dropbox-clone",
+          storageBucket: "project-dropbox-clone.appspot.com",
+          messagingSenderId: "372940429456",
+          appId: "1:372940429456:web:383dc9d60a10fb422ba015",
+          measurementId: "G-QPDZD1PY3E"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
     <script src="src/controller/DropBoxController.js"></script>
     <script src="src/index.js"></script>
 </body>
