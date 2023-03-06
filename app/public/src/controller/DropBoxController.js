@@ -1,14 +1,16 @@
 class DropBoxController {
     constructor() {
-      this.btnSendFileEl = document.querySelector("#btn-send-file");
-      this.inputFilesEl = document.querySelector("#files");
-      this.snackModalEl = document.querySelector("#react-snackbar-root");
-      this.progessBarEl = this.snackModalEl.querySelector('.mc-progress-bar-fg');
-      this.namefileEl = this.snackModalEl.querySelector('.filename');
-      this.timeleftEl = this.snackModalEl.querySelector('.timeleft');
+        this.btnSendFileEl = document.querySelector("#btn-send-file");
+        this.inputFilesEl = document.querySelector("#files");
+        this.snackModalEl = document.querySelector("#react-snackbar-root");
+        this.progessBarEl = this.snackModalEl.querySelector('.mc-progress-bar-fg');
+        this.namefileEl = this.snackModalEl.querySelector('.filename');
+        this.timeleftEl = this.snackModalEl.querySelector('.timeleft');
+        this.listFilesEl = document.querySelector('#list-of-files-and-directories');
 
-      this.connectFirebase()
-      this.initEvents();
+        this.connectFirebase()
+        this.initEvents();
+        this.readFiles();
     }
   
     connectFirebase(){
@@ -139,7 +141,7 @@ uploadComplete(){
 
         this.progessBarEl.style.width = `${porcent}%`;
 
-        this.namefileEl.innerHTML = file.name;
+        this.namefileEl.innerHTML = file.originalFileName;
         this.timeleftEl.innerHTML = this.formatTimeToHuman(timeleft);
 
     }
@@ -168,7 +170,7 @@ uploadComplete(){
 
     GetFileIconView(file){
 
-      switch (file.type) {
+      switch (file.mimetype) {
 
         case 'folder':
             return `
@@ -332,14 +334,37 @@ uploadComplete(){
 
     }
 
-    GetFileView(file){
+    GetFileView(file, key){
 
-      return `
+        let li = document.createElement('li');
+
+        li.dataset.key = key;
+
+        li.innerHTML = `
           <li>
               ${this.GetFileIconView(file)}
-              <div class="name text-center">${file.name}</div>
+              <div class="name text-center">${file.originalFilename}</div>
           </li>
-      `
+      `;
+        return li;
+    }
+
+    readFiles(){
+
+        this.getFirebaseRef().on('value', snapshot => {
+
+            this.listFilesEl.innerHTML = '';
+
+            snapshot.forEach(snapshotItem => {
+
+                let key = snapshotItem.key;
+                let data = snapshotItem.val();
+
+                this.listFilesEl.appendChild(this.GetFileView(data, key));
+
+            });
+
+        });
 
     }
 
