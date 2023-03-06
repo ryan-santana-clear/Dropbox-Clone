@@ -11,6 +11,10 @@ class DropBoxController {
         this.timeleftEl = this.snackModalEl.querySelector('.timeleft');
         this.listFilesEl = document.querySelector('#list-of-files-and-directories');
 
+        this.btnNewFolder = document.querySelector('#btn-new-folder');
+        this.btnRename = document.querySelector('#btn-rename');
+        this.btnDelete = document.querySelector('#btn-delete');
+
         this.connectFirebase()
         this.initEvents();
         this.readFiles();
@@ -38,11 +42,33 @@ class DropBoxController {
         }
     }
 
+    getSelection(){
+
+        return this.listFilesEl.querySelectorAll('.selected');
+
+    }
+
     initEvents() {
         
         this.listFilesEl.addEventListener('selectionchange', e=>{
 
-            console.log('selectionchange');
+            switch (this.getSelection().length) {
+
+                case 0:
+                    this.btnDelete.style.display = 'none';
+                    this.btnRename.style.display = 'none';                
+                break;
+
+                case 1:
+                    this.btnDelete.style.display = 'block';
+                    this.btnRename.style.display = 'block';
+                break;
+
+                default:
+                    this.btnDelete.style.display = 'block';
+                    this.btnRename.style.display = 'none';
+
+            }
 
         });
         
@@ -385,8 +411,6 @@ uploadComplete(){
 
         li.addEventListener('click', e=>{
 
-            this. listFilesEl.dispatchEvent(this.oneselectionchange);
-
             if (e.shiftKey) {
 
                 let firstLi = this.listFilesEl.querySelector('.selected');
@@ -416,6 +440,8 @@ uploadComplete(){
 
                     });
 
+                    this.listFilesEl.dispatchEvent(this.oneselectionchange);
+
                     return true;
 
                 }
@@ -433,6 +459,8 @@ uploadComplete(){
             }
 
             li.classList.toggle('selected');
+
+            this.listFilesEl.dispatchEvent(this.oneselectionchange);
 
         });
             
