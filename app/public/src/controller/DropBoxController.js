@@ -34,23 +34,50 @@ class DropBoxController {
     }
 
     initEvents() {
-      this.btnSendFileEl.addEventListener("click", (event) => {
-        this.inputFilesEl.click();
-      });
+        this.btnSendFileEl.addEventListener("click", (event) => {
+            this.inputFilesEl.click();
+        });
   
-      this.inputFilesEl.addEventListener("change", (event) => {
-        this.uploadTask(event.target.files).then(responses =>{
+        this.inputFilesEl.addEventListener("change", (event) => {
+            
+            this.btnSendFileEl.disabled = true;
 
-            responses.forEach(resp => {
-              this.modalShow();
-              console.log(resp.files['input-file']);
-            });
+            this.uploadTask(event.target.files).then(responses =>{
+
+                responses.forEach(resp => {
+                    
+                    this.getFirebaseRef().push().set(resp.files['input-file']);
+
+                });
+
+                this.uploadComplete();
+
+            }).catch(err=>{
+
+                this.uploadComplete();
+                console.error(err);
+
+            })
+
+            this.modalShow();
 
         });
-        this.inputFilesEl.value = '';
-      });
     }
-  
+
+uploadComplete(){
+
+    this.modalShow(false);
+    this.inputFilesEl.value = '';
+    this.btnSendFileEl.disabled = false;
+
+}
+
+    getFirebaseRef(){
+
+        return firebase.database().ref('files');
+
+    }
+
     modalShow(show = true){
 
         this.snackModalEl.style.display = (show) ? 'block' : 'none';
@@ -78,8 +105,6 @@ class DropBoxController {
           }
   
           ajax.onerror = event => {
-
-            this.modalShow(false);
 
             reject(event)
           }
