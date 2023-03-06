@@ -346,6 +346,9 @@ uploadComplete(){
               <div class="name text-center">${file.originalFilename}</div>
           </li>
       `;
+
+        this.initEventsLi(li);
+
         return li;
     }
 
@@ -368,5 +371,15 @@ uploadComplete(){
 
     }
 
+    initEventsLi(li){
+
+        li.addEventListener('click', e=>{
+
+            li.classList.toggle('selected');
+
+        });
+            
+    };
+        
 }
   
