@@ -60,12 +60,26 @@ class DropBoxController {
 
             let file = JSON.parse(li.dataset.file);
             let key = li.dataset.key;
-            let formData = new FormData();
 
-            formData.append('path', file.filepath);
-            formData.append('key', key);
+            promises.push(new Promise((resolve, reject)=>{
 
-            promises.push(this.ajax('DELETE', '/file', formData));
+               let fileRef = firebase.storage().ref(this.currentFolder.join('/')).child(file.name);
+
+                fileRef.delete().then(()=>{
+
+                    resolve({
+                        fields:{
+                            key
+                        }
+                    });
+
+                }).catch(err=>{
+
+                    reject(err);
+
+                })
+
+            }));
 
         });
 
